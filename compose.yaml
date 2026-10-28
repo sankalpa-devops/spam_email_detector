@@ -1,0 +1,11 @@
+
+services:
+  spam-detection:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ai-spam-detection:local
+    container_name: ai-spam-container
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
