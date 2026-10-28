@@ -1,0 +1,34 @@
+
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mlruns/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+.venv/
+venv/
+
+# DVC cache
+.dvc/cache/
+
+# MLflow
+mlruns/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Temporary files
+*.log
