@@ -56,3 +56,19 @@ stages:
       hash: md5
       md5: bd6cfe7947a3819ef9aa77ffc965b866
       size: 444910
+  check_model_quality:
+    cmd: python check_model_quality.py
+    deps:
+    - path: artifacts/metrics.json
+      hash: md5
+      md5: 8bce281924c801ba4faca71b6f1f8777
+      size: 1309
+    - path: check_model_quality.py
+      hash: md5
+      md5: 37ba32c3bf43132ad1709275a7e8ee56
+      size: 1803
+    outs:
+    - path: artifacts/quality_report.json
+      hash: md5
+      md5: 7406b66283ca9619800b9d46c03c0cea
+      size: 414

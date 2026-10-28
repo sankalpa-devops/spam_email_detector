@@ -26,3 +26,11 @@ stages:
       - spam.model.joblib
     metrics:
       - artifacts/metrics.json
+      
+  check_model_quality:
+    cmd: python check_model_quality.py
+    deps:
+      - check_model_quality.py
+      - artifacts/metrics.json
+    outs:
+      - artifacts/quality_report.json
