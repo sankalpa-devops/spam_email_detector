@@ -1,7 +1,8 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python train_model.py
+    cmd: set "MLFLOW_ALLOW_FILE_STORE=true" && .\.venv\Scripts\python.exe 
+      train_model.py
     deps:
     - path: artifacts/prepared_data.csv
       hash: md5
@@ -9,23 +10,23 @@ stages:
       size: 444910
     - path: requirements.txt
       hash: md5
-      md5: f66027f3b539975ca813fa74503b9830
-      size: 3360
+      md5: ee2ac2ad6ae2b9b8826640bbd843f38d
+      size: 3438
     - path: train_model.py
       hash: md5
-      md5: 4c9d3ffa2ed2e7b4943fc6ceb6a40129
-      size: 4571
+      md5: 333959c8c616ab192eb48b04d9661ae8
+      size: 5365
     outs:
     - path: artifacts/metrics.json
       hash: md5
-      md5: 8bce281924c801ba4faca71b6f1f8777
+      md5: ea31d768f2665ec08459d0eda607b4f6
       size: 1309
     - path: spam.model.joblib
       hash: md5
       md5: 4fd854b11640b9c7a943333577e009cb
       size: 401345
   validate_data:
-    cmd: python validate_data.py
+    cmd: .\.venv\Scripts\python.exe validate_data.py
     deps:
     - path: sms+spam+collection/SMSSpamCollection
       hash: md5
@@ -41,7 +42,7 @@ stages:
       md5: 5822ab6b51dd0c6d929510fe1421e94e
       size: 94
   prepare_data:
-    cmd: python prepare_data.py
+    cmd: .\.venv\Scripts\python.exe prepare_data.py
     deps:
     - path: prepare_data.py
       hash: md5
@@ -57,11 +58,11 @@ stages:
       md5: bd6cfe7947a3819ef9aa77ffc965b866
       size: 444910
   check_model_quality:
-    cmd: python check_model_quality.py
+    cmd: .\.venv\Scripts\python.exe check_model_quality.py
     deps:
     - path: artifacts/metrics.json
       hash: md5
-      md5: 8bce281924c801ba4faca71b6f1f8777
+      md5: ea31d768f2665ec08459d0eda607b4f6
       size: 1309
     - path: check_model_quality.py
       hash: md5
@@ -72,3 +73,31 @@ stages:
       hash: md5
       md5: 7406b66283ca9619800b9d46c03c0cea
       size: 414
+  test_api:
+    cmd: .\.venv\Scripts\python.exe -m pytest -v --junitxml=pytest-report.xml
+    deps:
+    - path: app.py
+      hash: md5
+      md5: a850a25fb0c9a1d337dcbf016903fcea
+      size: 1945
+    - path: artifacts/quality_report.json
+      hash: md5
+      md5: 7406b66283ca9619800b9d46c03c0cea
+      size: 414
+    - path: requirements.txt
+      hash: md5
+      md5: ee2ac2ad6ae2b9b8826640bbd843f38d
+      size: 3438
+    - path: spam.model.joblib
+      hash: md5
+      md5: 4fd854b11640b9c7a943333577e009cb
+      size: 401345
+    - path: tests/test_app.py
+      hash: md5
+      md5: e3e12c2bc82c7567a2b7ca443c99d46f
+      size: 1839
+    outs:
+    - path: pytest-report.xml
+      hash: md5
+      md5: 4a7a1076ed88fb3bb6bc77f78386b462
+      size: 761

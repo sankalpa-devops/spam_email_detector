@@ -1,7 +1,7 @@
 
 stages:
   validate_data:
-    cmd: python validate_data.py
+    cmd: .\.venv\Scripts\python.exe validate_data.py
     deps:
       - validate_data.py
       - sms+spam+collection/SMSSpamCollection
@@ -9,7 +9,7 @@ stages:
       - artifacts/data_validation.json
 
   prepare_data:
-    cmd: python prepare_data.py
+    cmd: .\.venv\Scripts\python.exe prepare_data.py
     deps:
       - prepare_data.py
       - sms+spam+collection/SMSSpamCollection
@@ -17,7 +17,7 @@ stages:
       - artifacts/prepared_data.csv
 
   train:
-    cmd: python train_model.py
+    cmd: set "MLFLOW_ALLOW_FILE_STORE=true" && .\.venv\Scripts\python.exe train_model.py
     deps:
       - train_model.py
       - requirements.txt
@@ -26,11 +26,22 @@ stages:
       - spam.model.joblib
     metrics:
       - artifacts/metrics.json
-      
+
   check_model_quality:
-    cmd: python check_model_quality.py
+    cmd: .\.venv\Scripts\python.exe check_model_quality.py
     deps:
       - check_model_quality.py
       - artifacts/metrics.json
     outs:
       - artifacts/quality_report.json
+
+  test_api:
+    cmd: .\.venv\Scripts\python.exe -m pytest -v --junitxml=pytest-report.xml
+    deps:
+      - app.py
+      - tests/test_app.py
+      - spam.model.joblib
+      - requirements.txt
+      - artifacts/quality_report.json
+    outs:
+      - pytest-report.xml
