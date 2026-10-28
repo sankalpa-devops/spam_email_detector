@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AI Spam Detection
 
 This project builds and deploys a machine learning spam detector for SMS messages. It uses a TF-IDF vectorizer and a Multinomial Naive Bayes classifier to classify text as `ham` or `spam`. The trained model is saved and then loaded by a Flask web app for live predictions.
@@ -129,3 +130,6 @@ The model uses the classic SMS Spam Collection dataset. It contains labeled text
 ## License
 
 This project is provided for educational purposes and can be adapted for your own learning or experiments.
+=======
+# spam_email_detector
+>>>>>>> origin/main
