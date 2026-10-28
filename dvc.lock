@@ -1,0 +1,22 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python train_model.py
+    deps:
+    - path: sms+spam+collection/SMSSpamCollection
+      hash: md5
+      md5: 1949b64a224790d01335c2bf8a0e48b2
+      size: 477907
+    - path: train_model.py
+      hash: md5
+      md5: 4c9d3ffa2ed2e7b4943fc6ceb6a40129
+      size: 4571
+    outs:
+    - path: artifacts/metrics.json
+      hash: md5
+      md5: 6274c71b5c328e53bfb94447b7e92a89
+      size: 1309
+    - path: spam.model.joblib
+      hash: md5
+      md5: 4fd854b11640b9c7a943333577e009cb
+      size: 401345

@@ -1,0 +1,11 @@
+stages:
+  train:
+    cmd: python train_model.py
+    deps:
+      - train_model.py
+      - sms+spam+collection/SMSSpamCollection
+    outs:
+      - spam.model.joblib
+    metrics:
+      - artifacts/metrics.json:
+          cache: false
