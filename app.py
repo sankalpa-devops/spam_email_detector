@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import joblib
 
 app = Flask(__name__)
@@ -31,6 +31,30 @@ def home():
     return render_template('index.html', prediction=prediction, message=message,
                            confidence=confidence, error=error)
 
+@app.route('/api/predict', methods=['POST'])
+def predict_api():
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return jsonify({'error': 'Send a JSON object with a message.'}), 400
+
+    message = data.get('message')
+
+    if not isinstance(message, str) or not message.strip():
+        return jsonify({'error': 'Please provide a non-empty message.'}), 400
+
+    message = message.strip()
+
+    result = int(model.predict([message])[0])
+    probabilities = model.predict_proba([message])[0]
+
+    prediction = 'Spam' if result == 1 else 'Ham'
+    confidence = round(float(max(probabilities)) * 100, 2)
+
+    return jsonify({
+        'prediction': prediction,
+        'confidence': confidence
+    })
 
 @app.route('/about')
 def health():
@@ -38,4 +62,4 @@ def health():
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
