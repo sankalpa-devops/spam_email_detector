@@ -1,11 +1,28 @@
+
 stages:
+  validate_data:
+    cmd: python validate_data.py
+    deps:
+      - validate_data.py
+      - sms+spam+collection/SMSSpamCollection
+    outs:
+      - artifacts/data_validation.json
+
+  prepare_data:
+    cmd: python prepare_data.py
+    deps:
+      - prepare_data.py
+      - sms+spam+collection/SMSSpamCollection
+    outs:
+      - artifacts/prepared_data.csv
+
   train:
     cmd: python train_model.py
     deps:
       - train_model.py
-      - sms+spam+collection/SMSSpamCollection
+      - requirements.txt
+      - artifacts/prepared_data.csv
     outs:
       - spam.model.joblib
     metrics:
-      - artifacts/metrics.json:
-          cache: false
+      - artifacts/metrics.json

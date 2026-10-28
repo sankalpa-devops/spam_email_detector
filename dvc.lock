@@ -3,10 +3,14 @@ stages:
   train:
     cmd: python train_model.py
     deps:
-    - path: sms+spam+collection/SMSSpamCollection
+    - path: artifacts/prepared_data.csv
       hash: md5
-      md5: 1949b64a224790d01335c2bf8a0e48b2
-      size: 477907
+      md5: bd6cfe7947a3819ef9aa77ffc965b866
+      size: 444910
+    - path: requirements.txt
+      hash: md5
+      md5: f66027f3b539975ca813fa74503b9830
+      size: 3360
     - path: train_model.py
       hash: md5
       md5: 4c9d3ffa2ed2e7b4943fc6ceb6a40129
@@ -14,9 +18,41 @@ stages:
     outs:
     - path: artifacts/metrics.json
       hash: md5
-      md5: 6274c71b5c328e53bfb94447b7e92a89
+      md5: 8bce281924c801ba4faca71b6f1f8777
       size: 1309
     - path: spam.model.joblib
       hash: md5
       md5: 4fd854b11640b9c7a943333577e009cb
       size: 401345
+  validate_data:
+    cmd: python validate_data.py
+    deps:
+    - path: sms+spam+collection/SMSSpamCollection
+      hash: md5
+      md5: 1949b64a224790d01335c2bf8a0e48b2
+      size: 477907
+    - path: validate_data.py
+      hash: md5
+      md5: 65d7dcf01e3e60b8393c1b9c7cbdc2db
+      size: 1414
+    outs:
+    - path: artifacts/data_validation.json
+      hash: md5
+      md5: 5822ab6b51dd0c6d929510fe1421e94e
+      size: 94
+  prepare_data:
+    cmd: python prepare_data.py
+    deps:
+    - path: prepare_data.py
+      hash: md5
+      md5: 03dd98acebe09d0da7c97b5f0e26d0cf
+      size: 1146
+    - path: sms+spam+collection/SMSSpamCollection
+      hash: md5
+      md5: 1949b64a224790d01335c2bf8a0e48b2
+      size: 477907
+    outs:
+    - path: artifacts/prepared_data.csv
+      hash: md5
+      md5: bd6cfe7947a3819ef9aa77ffc965b866
+      size: 444910
