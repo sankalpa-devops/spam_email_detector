@@ -32,3 +32,11 @@ mlruns/
 
 # Temporary files
 *.log
+/spam.model.joblib
+
+# Generated ML artifacts
+artifacts/metrics.json
+spam.model.joblib
+
+# MLflow tracking data
+mlruns/
