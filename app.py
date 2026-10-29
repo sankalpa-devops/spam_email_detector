@@ -1,8 +1,47 @@
 import os
 from flask import Flask, render_template, request, jsonify
 import joblib
+import csv
+from datetime import datetime, timezone
+from threading import Lock
+
 
 app = Flask(__name__)
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
+logs_dir = os.path.join(base_dir, "logs")
+os.makedirs(logs_dir, exist_ok=True)
+
+log_path = os.path.join(logs_dir, "predictions.csv")
+if not os.path.exists(log_path):
+    with open(log_path, "w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(["timestamp", "message_length", "prediction", "confidence"])
+
+log_lock = Lock()
+
+
+def log_prediction(message, prediction, confidence):
+    with log_lock:
+        file_exists = os.path.exists(log_path)
+
+        with open(log_path, "a", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+
+            if not file_exists or os.path.getsize(log_path) == 0:
+                writer.writerow([
+                    "timestamp",
+                    "message_length",
+                    "prediction",
+                    "confidence"
+                ])
+
+            writer.writerow([
+                datetime.now(timezone.utc).isoformat(),
+                len(message),
+                prediction,
+                confidence
+            ])
 
 # Load the trained model from the same folder as this file
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -51,10 +90,14 @@ def predict_api():
     prediction = 'Spam' if result == 1 else 'Ham'
     confidence = round(float(max(probabilities)) * 100, 2)
 
+    # Log the prediction to CSV 
+    log_prediction(message, prediction, confidence)
+
     return jsonify({
         'prediction': prediction,
         'confidence': confidence
     })
+
 
 @app.route('/about')
 def health():
